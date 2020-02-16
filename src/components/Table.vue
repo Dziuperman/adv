@@ -13,6 +13,7 @@
                     hide-details
                 ></v-text-field>
             </v-card-title>
+
             <v-data-table
                 :headers="headers"
                 :items="groups"
@@ -23,6 +24,7 @@
                 show-expand
                 class="elevation-1"
             >
+
                 <template v-slot:expanded-item="{ headers, item }">
                     <td :colspan="headers.length">
                         <v-data-table
@@ -45,6 +47,10 @@
     export default {
         data() {
             return {
+                filters: {
+                    search: '',
+                    added_by: '',
+                },
                 search: '',
                 errors: [],
                 expanded: [],
