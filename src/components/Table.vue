@@ -1,34 +1,43 @@
 <template>
     <v-container>
         <v-app id="inspire">
+            <v-card-title>
+                Nutrition
+                <v-spacer></v-spacer>
+                <v-text-field
+                    v-model="search"
+                    append-icon="search"
+                    label="Поиск"
+                    single-line
+                    hide-details
+                ></v-text-field>
+            </v-card-title>
             <v-data-table
                 :headers="headers"
-                :items="users"
-                :single-expand="singleExpand"
+                :items="groups"
+                :search="search"
                 :expanded.sync="expanded"
+                hide-default-footer
                 item-key="id"
                 show-expand
                 class="elevation-1"
             >
-                <template v-slot:expanded-item="{ headers }">
+                <template v-slot:expanded-item="{ headers, item }">
                     <td :colspan="headers.length">
                         <v-simple-table>
                             <template v-slot:default>
                                 <thead>
                                 <tr>
-                                    <th>Dessert (400g serving)</th>
-                                    <th>Calories</th>
-                                    <th>Fat</th>
-                                    <th>Carbs</th>
-                                    <th>Protein</th>
-                                    <th>Iron</th>
+                                    <th>Дата</th>
+                                    <th>Событие</th>
+                                    <th>Сумма</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="post in todos" :key="post.id">
-                                    <td class="text-start">{{ post.title }}</td>
-                                    <td class="text-start">{{ post.id * 4 }}</td>
-                                    <td class="text-start">{{ post.completed }}</td>
+                                <tr v-for="event in item.events" :key="event.id">
+                                    <td class="text-start">{{ event.data }}</td>
+                                    <td class="text-start">{{ event.event }}</td>
+                                    <td class="text-start">{{ event.price }}</td>
                                 </tr>
                                 </tbody>
                             </template>
@@ -46,11 +55,9 @@
     export default {
         data() {
             return {
-                todos: [],
+                search: '',
                 errors: [],
-                users: [],
                 expanded: [],
-                singleExpand: false,
                 headers: [
                     {
                         text: 'Название',
@@ -61,122 +68,69 @@
                     {text: 'id объявления', value: 'id'},
                     {text: 'Адрес', value: 'address.street'},
                 ],
-                desserts: [
-                    {
-                        name: 'Frozen Yogurt',
-                        calories: 159,
-                        fat: 6.0,
-                        carbs: 24,
-                    },
-                    {
-                        name: 'Ice cream sandwich',
-                        calories: 237,
-                        fat: 9.0,
-                        carbs: 37,
-                    },
-                    {
-                        name: 'Eclair',
-                        calories: 262,
-                        fat: 16.0,
-                        carbs: 23,
-                    },
-                    {
-                        name: 'Cupcake',
-                        calories: 305,
-                        fat: 3.7,
-                        carbs: 67,
-                    },
-                    {
-                        name: 'Gingerbread',
-                        calories: 356,
-                        fat: 16.0,
-                        carbs: 49,
-                    },
-                    {
-                        name: 'Jelly bean',
-                        calories: 375,
-                        fat: 0.0,
-                        carbs: 94,
-                    },
-                    {
-                        name: 'Lollipop',
-                        calories: 392,
-                        fat: 0.2,
-                        carbs: 98,
-                    },
-                    {
-                        name: 'Honeycomb',
-                        calories: 408,
-                        fat: 3.2,
-                        carbs: 87,
-                    },
-                    {
-                        name: 'Donut',
-                        calories: 452,
-                        fat: 25.0,
-                        carbs: 51,
-                    },
-                    {
-                        name: 'KitKat',
-                        calories: 518,
-                        fat: 26.0,
-                        carbs: 65,
-                    },
-                ],
                 adverts: [
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.1',
                         event: 'P',
+                        price: '2 000'
                     },
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.2',
                         event: 'PO',
+                        price: '2 000'
                     },
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.3',
                         event: 'P',
+                        price: '2 000'
                     },
                     {
                         id: 2,
                         name: 'name-2',
                         data: '1.4',
                         event: 'V',
+                        price: '2 000'
                     },
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.5',
                         event: 'P',
+                        price: '2 000'
                     },
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.6',
                         event: 'PO',
+                        price: '2 000'
                     },
                     {
                         id: 2,
                         name: 'name-2',
                         data: '1.7',
                         event: 'PO',
+                        price: '2 000'
                     },
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.8',
                         event: 'V',
+                        price: '2 000'
                     },
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.9',
                         event: 'P',
+                        price: '2 000'
                     },
 
                 ],
