@@ -1,6 +1,7 @@
 <template>
     <v-container>
         <v-app id="inspire">
+
             <v-card-title>
                 Nutrition
                 <v-spacer></v-spacer>
@@ -24,24 +25,13 @@
             >
                 <template v-slot:expanded-item="{ headers, item }">
                     <td :colspan="headers.length">
-                        <v-simple-table>
-                            <template v-slot:default>
-                                <thead>
-                                <tr>
-                                    <th>Дата</th>
-                                    <th>Событие</th>
-                                    <th>Сумма</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="event in item.events" :key="event.id">
-                                    <td class="text-start">{{ event.data }}</td>
-                                    <td class="text-start">{{ event.event }}</td>
-                                    <td class="text-start">{{ event.price }}</td>
-                                </tr>
-                                </tbody>
-                            </template>
-                        </v-simple-table>
+                        <v-data-table
+                        :items="item.events"
+                        :headers="eventHeaders"
+                        item-key="id"
+                        hide-default-footer
+                        >
+                        </v-data-table>
                     </td>
                 </template>
             </v-data-table>
@@ -62,11 +52,21 @@
                     {
                         text: 'Название',
                         align: 'left',
-                        sortable: true,
                         value: 'name',
                     },
                     {text: 'id объявления', value: 'id'},
                     {text: 'Адрес', value: 'address.street'},
+                ],
+                eventHeaders: [
+                    {
+                        text: 'Дата', value: 'data'
+                    },
+                    {
+                        text: 'Событие', value: 'event'
+                    },
+                    {
+                        text: 'Сумма', value: 'amount'
+                    },
                 ],
                 adverts: [
                     {
@@ -74,67 +74,68 @@
                         name: 'name-1',
                         data: '1.1',
                         event: 'P',
-                        price: '2 000'
+                        amount: '2 000'
                     },
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.2',
                         event: 'PO',
-                        price: '2 000'
+                        amount: '2 000'
                     },
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.3',
                         event: 'P',
-                        price: '2 000'
+                        amount: '2 000'
                     },
                     {
                         id: 2,
                         name: 'name-2',
                         data: '1.4',
                         event: 'V',
-                        price: '2 000'
+                        amount: '2 000'
                     },
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.5',
                         event: 'P',
-                        price: '2 000'
+                        amount: '2 000'
                     },
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.6',
                         event: 'PO',
-                        price: '2 000'
+                        amount: '2 000'
                     },
                     {
                         id: 2,
                         name: 'name-2',
                         data: '1.7',
                         event: 'PO',
-                        price: '2 000'
+                        amount: '2 000'
                     },
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.8',
                         event: 'V',
-                        price: '2 000'
+                        amount: '2 000'
                     },
                     {
                         id: 1,
                         name: 'name-1',
                         data: '1.9',
                         event: 'P',
-                        price: '2 000'
+                        amount: '2 000'
                     },
 
                 ],
                 groups: [],
+                foodType: null,
             }
         },
         mounted() {
@@ -171,7 +172,7 @@
                 }
             }
             console.log(this.groups);
-        }
+        },
     }
 
 </script>
