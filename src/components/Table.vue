@@ -7,7 +7,58 @@
                         :items="accounts"
                         label="Выберите аккаунт"
                 />
+
+                <v-layout row wrap>
+                    <v-flex xs12 sm6 md4>
+                        <v-menu
+                                v-model="menu1"
+                                :close-on-content-click="true"
+                                :nudge-right="40"
+                                lazy
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px"
+                        >
+                            <template v-slot:activator="{ on }">
+                                <v-text-field
+                                        v-model="date"
+                                        label="Picker without buttons"
+                                        prepend-icon="event"
+                                        readonly
+                                        v-on="on"
+                                ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="date" @input="menu1 = false"></v-date-picker>
+                        </v-menu>
+                    </v-flex>
+                    <v-spacer></v-spacer>
+                    <v-flex xs12 sm6 md4>
+                        <v-menu
+                                v-model="menu2"
+                                :close-on-content-click="true"
+                                :nudge-right="40"
+                                lazy
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px"
+                        >
+                            <template v-slot:activator="{ on }">
+                                <v-text-field
+                                        v-model="date"
+                                        label="Picker without buttons"
+                                        prepend-icon="event"
+                                        readonly
+                                        v-on="on"
+                                ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
+                        </v-menu>
+                    </v-flex>
+                </v-layout>
             </div>
+
 
             <v-card-title>
                 Список транзакций
@@ -23,7 +74,7 @@
 
             <v-data-table
                     :headers="headers"
-                    :items="adverts"
+                    :items="grouppedTransacion"
                     :search="search"
                     :expanded.sync="expanded"
                     hide-default-footer
@@ -55,6 +106,11 @@
     export default {
         data() {
             return {
+                date: new Date().toISOString().substr(0, 10),
+                menu1: false,
+                menu2: false,
+                dateFrom: '',
+                dateTo: '',
                 filters: {
                     search: '',
                     added_by: '',
@@ -83,16 +139,12 @@
                 accounts: [],
                 selectedAccount: null,
                 apiDomain: 'http://192.168.1.36:8000/io.askom.farpost_statistics',
-                adverts: [],
+                advertisements: [],
                 busy: true,
             }
         },
         beforeMount() {
             this.fetchAccounts()
-            // this.fetchAdvertisements()
-        },
-        mounted() {
-
         },
         methods: {
             fetchAccounts() {
@@ -112,23 +164,40 @@
                 this.busy = true
                 axios.get(this.apiDomain + '/api.php?method=list&account=' + this.selectedAccount)
                     .then(response => {
-                        this.adverts = []
-                        this.groupTransactions(response.data, () => {
-                            this.busy = false
-                        })
+                        this.advertisements = response.data.transactions
+
+                        this.busy = false
                     })
                     .catch(e => {
                         console.error(e)
                     })
             },
-            async groupTransactions(transactions, callback) {
-                await transactions.map((transaction) => {
-                    const existGroup = this.adverts.findIndex(advertGroup => advertGroup.id === transaction.advertisement_id)
+            parseDate(date) {
+                if (!date) return null
+
+                const [day, month, year] = date.split('.')
+                return `${day.padStart(2, '0')}-${month.padStart(2, '0')}-${year}`
+            },
+            getDate() {
+                console.log(this.date)
+            }
+        },
+        watch: {
+            selectedAccount() {
+                return this.fetchAdvertisements()
+            }
+        },
+        computed: {
+            grouppedTransacion() {
+                const grouppedTransacion = []
+
+                this.advertisements.map((transaction) => {
+                    const existGroup = grouppedTransacion.findIndex(advertGroup => advertGroup.id === transaction.advertisement_id)
 
                     if (existGroup !== -1) {
-                        this.adverts[existGroup].events.push(transaction)
+                        grouppedTransacion[existGroup].events.push(transaction)
                     } else {
-                        this.adverts.push({
+                        grouppedTransacion.push({
                             id: transaction.advertisement_id,
                             title: transaction.advertisement_title,
                             events: [transaction]
@@ -136,14 +205,11 @@
                     }
                 })
 
-                if (typeof callback === "function") callback()
-            }
-        },
-        watch: {
-            selectedAccount() {
-                return this.fetchAdvertisements()
+                return grouppedTransacion
             }
         }
+
+
     }
 
 </script>
